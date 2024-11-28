@@ -327,7 +327,277 @@ GROUP BY
     pay_meal_out; 
 
 
-kkklovbe
+-- favorite cuisine among college students
+SELECT 
+    fav_cuisine, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    fav_cuisine IS NOT NULL
+GROUP BY 
+    fav_cuisine; 
+
+
+-- college students who prefer home-cooked meals or store-bought food
+SELECT 
+    fav_food, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    fav_food IS NOT NULL
+GROUP BY 
+    fav_food;
+    
+    
+-- frequency of college students checking nutritional values
+SELECT 
+    nutritional_check, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    nutritional_check IS NOT NULL
+GROUP BY 
+    nutritional_check;
+    
+
+-- food preferences of college students
+-- for soup 
+SELECT 
+    soup, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    soup IS NOT NULL
+GROUP BY 
+    soup;
+    
+-- for fries
+SELECT 
+    fries, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    fries IS NOT NULL
+GROUP BY 
+    fries;
+
+-- for drink
+SELECT 
+    drink, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    drink IS NOT NULL
+GROUP BY 
+    drink;
+    
+-- for breakfast 
+SELECT 
+    breakfast, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    breakfast IS NOT NULL
+GROUP BY 
+    breakfast;
+
+-- for ethnic food
+SELECT 
+    ethnic_food, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    ethnic_food IS NOT NULL
+GROUP BY 
+    ethnic_food;
+    
+-- college students' preferences for ethnic cuisines
+-- for greek food
+SELECT 
+    greek_food, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    greek_food IS NOT NULL
+GROUP BY 
+    greek_food;
+    
+-- for indian food
+SELECT 
+    indian_food, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    indian_food IS NOT NULL
+GROUP BY 
+    indian_food;
+
+-- for italian food
+SELECT 
+    italian_food, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    italian_food IS NOT NULL
+GROUP BY 
+    italian_food;
+    
+-- for persian food
+SELECT 
+    persian_food, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    persian_food IS NOT NULL
+GROUP BY 
+    persian_food;
+    
+-- for thai food
+SELECT 
+    thai_food, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    thai_food IS NOT NULL
+GROUP BY 
+    thai_food;
+    
+-- comparison of the ethnic foods most preferred by college students
+SELECT 
+    food_type,
+    SUM(CASE WHEN preference = 'Very Likely' THEN 1 ELSE 0 END) AS very_likely_count,
+    SUM(CASE WHEN preference = 'Very Unlikely' THEN 1 ELSE 0 END) AS very_unlikely_count
+FROM (
+    SELECT 'Italian Food' AS food_type, italian_food AS preference
+    FROM food.food_choices_prod
+    UNION ALL
+    SELECT 'Greek Food' AS food_type, greek_food AS preference
+    FROM food.food_choices_prod
+    UNION ALL
+    SELECT 'Thai Food' AS food_type, thai_food AS preference
+    FROM food.food_choices_prod
+    UNION ALL
+    SELECT 'Indian Food' AS food_type, indian_food AS preference
+    FROM food.food_choices_prod
+    UNION ALL
+    SELECT 'Persian Food' AS food_type, persian_food AS preference
+    FROM food.food_choices_prod
+) combined_data
+GROUP BY food_type
+ORDER BY very_likely_count DESC, very_unlikely_count ASC
+LIMIT 1000;
+
+-- college students who are most likely to eat vegetables for a day
+SELECT 
+    veggies_day, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    veggies_day IS NOT NULL
+GROUP BY 
+    veggies_day;
+
+-- college students who are most likely to eat fruits for a day
+SELECT
+    fruit_day, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    fruit_day IS NOT NULL
+GROUP BY 
+    fruit_day;
+    
+    
+-- determining if employment status affects college students' current diet
+SELECT 
+    employment,
+    SUM(CASE WHEN current_diet = 'Healthy' THEN 1 ELSE 0 END) AS healthy,
+    SUM(CASE WHEN current_diet = 'Unhealthy' THEN 1 ELSE 0 END) AS unhealthy,
+    SUM(CASE WHEN current_diet = 'Same thing' THEN 1 ELSE 0 END) AS the_same,
+    SUM(CASE WHEN current_diet = 'Unclear' THEN 1 ELSE 0 END) AS unclear
+FROM food.food_choices_prod
+GROUP BY employment
+ORDER BY employment;
+
+-- determining whether college students' current diet has an effect on their GPA
+SELECT 
+    GPA,
+    SUM(CASE WHEN current_diet = 'Healthy' THEN 1 ELSE 0 END) AS healthy,
+    SUM(CASE WHEN current_diet = 'Unhealthy' THEN 1 ELSE 0 END) AS unhealthy,
+    SUM(CASE WHEN current_diet = 'Same thing' THEN 1 ELSE 0 END) AS the_same,
+    SUM(CASE WHEN current_diet = 'Unclear' THEN 1 ELSE 0 END) AS unclear
+FROM food.food_choices_prod
+GROUP BY GPA
+ORDER BY GPA;
+
+SELECT 
+    ROUND(
+        (SUM(CASE WHEN GPA BETWEEN 2.0 AND 4.0 AND current_diet = 'Healthy' THEN 1 ELSE 0 END) 
+        / 
+        COUNT(CASE WHEN GPA BETWEEN 2.0 AND 4.0 THEN 1 END)) * 100, 2
+    ) AS healthy_percentage,
+    ROUND(
+        (SUM(CASE WHEN GPA BETWEEN 2.0 AND 4.0 AND current_diet = 'Unhealthy' THEN 1 ELSE 0 END) 
+        / 
+        COUNT(CASE WHEN GPA BETWEEN 2.0 AND 4.0 THEN 1 END)) * 100, 2
+    ) AS unhealthy_percentage
+FROM food.food_choices_prod
+WHERE GPA BETWEEN 2.0 AND 4.0;
+
+
+-- determining which gender, male or female, is healthier among college students
+SELECT 
+    gender,
+    SUM(CASE WHEN current_diet = 'Healthy' THEN 1 ELSE 0 END) AS healthy,
+    SUM(CASE WHEN current_diet = 'Unhealthy' THEN 1 ELSE 0 END) AS unhealthy,
+    SUM(CASE WHEN current_diet = 'Same thing' THEN 1 ELSE 0 END) AS the_same,
+    SUM(CASE WHEN current_diet = 'Unclear' THEN 1 ELSE 0 END) AS unclear
+FROM food.food_choices_prod
+GROUP BY gender
+ORDER BY gender;
+
+
+-- marital status of college students
+SELECT 
+    marital_status, 
+    COUNT(*) AS student_count,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM food.food_choices_prod)), 2) AS percentage
+FROM 
+    food.food_choices_prod
+WHERE 
+    marital_status IS NOT NULL
+GROUP BY 
+    marital_status;
 
 
 
